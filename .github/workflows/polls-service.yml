@@ -1,33 +1,38 @@
 name: CI/CD | Backend | polls-service
 
 on:
-    push:
-        branches: ["main", "staging"]
-        paths: ["backend/polls-service/**", ".github/workflows/polls-service.yml"]
-    pull_request:
-        branches: ["main", "staging"]
-        paths: ["backend/polls-service/**", ".github/workflows/polls-service.yml"]
-   
-jobs: 
-    build_and_test:
-        name: Build and Test
-        runs-on: ubuntu-latest
+  push:
+    branches: ["main", "staging"]
+    paths: ["backend/polls-service/**", ".github/workflows/polls-service.yml"]
+  pull_request:
+    branches: ["main", "staging"]
+    paths: ["backend/polls-service/**", ".github/workflows/polls-service.yml"]
 
-        steps:
-            - name: Checkout code
-              uses: actions/checkout@v5
+jobs:
+  build_and_test:
+    name: Build and Test
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./backend/polls-service
 
-            - name: Set up Node.js
-              uses: actions/setup-node@v6
-              with:
-                node-version: '24'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
 
-            - name: Install dependencies
-              run: npm ci
-            
-            - name: Lint code
-              run: npm run lint
+      - name: Set up Node.js
+        uses: actions/setup-node@v5
+        with:
+          node-version: "24"
+          cache: "npm"
+          cache-dependency-path: backend/polls-service/package-lock.json
 
-            - name: Run tests
-              run: npm test
-                
+      - name: Install dependencies
+        run: ls -la
+      - run: npm ci
+
+      - name: Lint code
+        run: npm run lint
+
+      - name: Run tests
+        run: npm test
