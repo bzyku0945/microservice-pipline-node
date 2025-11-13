@@ -6,7 +6,7 @@ export const pollController = {
     try {
       const polls = await pollService.getAll();
       res.status(200).json(polls);
-    } catch (error) {
+    } catch {
       res.status(500).json({ message: "Internal server error" });
     }
   },
